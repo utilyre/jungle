@@ -5,7 +5,6 @@ import (
 	"math"
 	"math/rand"
 	"os"
-	"time"
 
 	_ "image/png"
 
@@ -44,32 +43,26 @@ func run() {
 
 	var (
 		camPos       = pixel.ZV
-		camSpeed     = 500.0
 		camZoom      = 1.0
 		camZoomSpeed = 1.2
+		mouseOffset  = pixel.ZR
 		trees        []*pixel.Sprite
 		matrices     []pixel.Matrix
 	)
 
-	last := time.Now()
 	for !win.Closed() {
-		dt := time.Since(last).Seconds()
-		last = time.Now()
-
 		camZoom *= math.Pow(camZoomSpeed, win.MouseScroll().Y)
-		relativeCamSpeed := camSpeed / camZoom
 
-		if win.Pressed(pixelgl.KeyW) {
-			camPos.Y += relativeCamSpeed * dt
+		if win.JustPressed(pixelgl.MouseButtonRight) {
+			mouseOffset.Min = win.MousePosition()
 		}
-		if win.Pressed(pixelgl.KeyA) {
-			camPos.X -= relativeCamSpeed * dt
-		}
-		if win.Pressed(pixelgl.KeyS) {
-			camPos.Y -= relativeCamSpeed * dt
-		}
-		if win.Pressed(pixelgl.KeyD) {
-			camPos.X += relativeCamSpeed * dt
+		if win.Pressed(pixelgl.MouseButtonRight) {
+			mouseOffset.Max = win.MousePosition()
+		} else {
+			camPos.X -= mouseOffset.W() / camZoom
+			camPos.Y -= mouseOffset.H() / camZoom
+
+			mouseOffset = pixel.ZR
 		}
 
 		cam := pixel.IM.Scaled(camPos, camZoom).Moved(win.Bounds().Center().Sub(camPos))
