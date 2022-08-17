@@ -65,7 +65,7 @@ func run() {
 			mouseOffset = pixel.ZR
 		}
 
-		cam := pixel.IM.Scaled(camPos, camZoom).Moved(win.Bounds().Center().Sub(camPos))
+		cam := pixel.IM.Scaled(camPos, camZoom).Moved(win.Bounds().Center().Sub(camPos).Add(pixel.V(mouseOffset.W(), mouseOffset.H())))
 		win.SetMatrix(cam)
 
 		if win.JustPressed(pixelgl.MouseButtonLeft) {
