@@ -1,4 +1,4 @@
-module github.com/utilyre/mouse
+module github.com/utilyre/jungle
 
 go 1.19
 
